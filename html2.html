@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Windows 11 - Dark Mode</title>
+<style>
+    /* =========================================================
+       WINDOWS 11 DARK THEME — design tokens
+    ========================================================= */
+    :root {
+        --accent: #60cdff;
+        --accent-dark: #0078d4;
+        --taskbar-bg: rgba(32, 32, 32, 0.85);
+        --text: #f3f3f3;
+        --stroke: rgba(255, 255, 255, 0.1);
+        --taskbar-h: 48px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+        margin: 0; height: 100%; width: 100%; overflow: hidden;
+        font-family: "Segoe UI Variable", "Segoe UI", -apple-system, "Helvetica Neue", Arial, sans-serif;
+        user-select: none;
+        background: #000;
+        color: var(--text);
+    }
+
+    /* ---------------- FULLSCREEN CONTENT ---------------- */
+    .screen {
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        bottom: var(--taskbar-h);
+        background: #000;
+    }
+    .screen iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;
+    }
+
+    /* ---------------- BLANK / SHUTDOWN STATE ---------------- */
+    .blank-screen {
+        position: absolute;
+        inset: 0;
+        background: #000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+    }
+    .blank-screen.active { display: flex; }
+    .blank-screen span {
+        color: rgba(255,255,255,0.4);
+        font-size: 13px;
+        letter-spacing: 0.5px;
+    }
+
+    /* ---------------- TASKBAR ---------------- */
+    .taskbar {
+        position: absolute;
+        left: 0; right: 0; bottom: 0;
+        height: var(--taskbar-h);
+        background: var(--taskbar-bg);
+        backdrop-filter: blur(30px) saturate(1.4);
+        -webkit-backdrop-filter: blur(30px) saturate(1.4);
+        border-top: 1px solid var(--stroke);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 50;
+    }
+
+    .power-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 6px;
+        border: none;
+        background: transparent;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.15s ease;
+    }
+    .power-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+    .power-btn:active {
+        background: #e81123;
+    }
+    .power-btn svg {
+        width: 20px;
+        height: 20px;
+        stroke: var(--text);
+        fill: none;
+        stroke-width: 1.8;
+    }
+</style>
+</head>
+<body>
+
+    <div class="screen">
+        <!--
+            ================================================================
+            REPLACE THE URL BELOW WITH YOUR LINK
+            ================================================================
+        -->
+        <iframe id="main-frame" src="https://cds.cern.ch/collection/ATLAS?ln=en" allowfullscreen></iframe>
+    </div>
+
+    <div class="blank-screen" id="blank-screen">
+        <span>You can close this tab now.</span>
+    </div>
+
+    <div class="taskbar">
+        <button class="power-btn" id="power-btn" title="Power" onclick="powerOff()">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2v8"/>
+                <path d="M18.36 6.64a9 9 0 1 1-12.73 0"/>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        function powerOff() {
+            // Blank out the screen first
+            document.getElementById('blank-screen').classList.add('active');
+            document.getElementById('main-frame').src = 'about:blank';
+
+            // Try to close the tab (only works if the tab was opened by script,
+            // due to browser security restrictions on closing tabs)
+            window.close();
+        }
+    </script>
+
+</body>
+</html>
